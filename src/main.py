@@ -1,3 +1,9 @@
+""" 
+Author: Daniel Saleh
+
+"""
+
+
 import requests
 import json
 import time
