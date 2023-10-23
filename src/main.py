@@ -3,7 +3,6 @@ Author: Daniel Saleh
 
 """
 
-
 import requests
 import json
 import time
@@ -24,10 +23,9 @@ class HouseListingsScraper:
 
     """
 
-
     BASE_URL = 'https://api.boligsiden.dk/search/cases?'
     PAGE_NUM = "page="
-    PER_PAGE = "per_page=5"
+    PER_PAGE = "per_page=1000"
     LISTING_TYPE = [
         'villa', 'condo', 'terraced+house', 'holiday+house', 'cooperative',
         'farm', 'hobby+farm', 'full+year+plot', 'villa+apartment', 'holiday+plot'
@@ -51,22 +49,18 @@ class HouseListingsScraper:
         return self.fetch_json_data(url)
         
     def parse_json_data(self, json_data):
-        # if '_links' in json_data:
-        #     json_data.pop('_links')
         return pd.DataFrame(json_data['cases'])
 
 
     def page_loop(self):
-        json_list = []
-        for i in range(1, 5):
+        for i in range(1, 10):
             json_data = self.fetch_house_listings(i)
             if json_data:
                 self.logger.info(f"JSON added: {type(json_data)}")
+                
                 df = self.parse_json_data(json_data)
-                json_list.append(df)
-
-        dfs = pd.concat(json_list)
-        dfs.to_csv(self.file_path, index=False)
+                PATH = 'src/data/raw_data_test_%s.csv' % i
+                df.to_csv(PATH, index=False)
 
     def main(self):
         self.page_loop()
@@ -79,7 +73,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format=log_format, filename=LOG_FILE)
 
-    DATA_PATH = r'src/data/raw_data_test.csv'
     house_scraper = HouseListingsScraper(DATA_PATH)
     house_scraper.main()
 
