@@ -32,7 +32,7 @@ class HouseListingsScraper:
     ]
     ADDRESS_TYPE = "addressTypes="
 
-    def __init__(self, file_path):
+    def __init__(self, file_path=None):
         self.file_path = file_path
         self.logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class HouseListingsScraper:
                 self.logger.info(f"JSON added: {type(json_data)}")
                 
                 df = self.parse_json_data(json_data)
-                PATH = 'src/data/raw_data_test_%s.csv' % i
+                PATH = 'src/data/raw_data_%s.csv' % i
                 df.to_csv(PATH, index=False)
 
     def main(self):
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format=log_format, filename=LOG_FILE)
 
-    house_scraper = HouseListingsScraper(DATA_PATH)
+    house_scraper = HouseListingsScraper()
     house_scraper.main()
 
 
